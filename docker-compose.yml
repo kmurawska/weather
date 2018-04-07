@@ -1,0 +1,18 @@
+version: '3'
+
+networks:
+  weather:
+
+services:
+
+  weather-payara:
+    container_name: weather-payara
+    hostname: weather-payara
+    image: payara/server-full:5.181
+    ports:
+      - 8080:8080
+      - 4848:4848
+    volumes:
+      - /c/Users/weather/deployments:/opt/payara5/glassfish/domains/domain1/autodeploy
+    networks:
+      - weather
