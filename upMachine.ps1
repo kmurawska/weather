@@ -31,6 +31,9 @@ if ($dockerMachines -Like "*weather*") {
 	echo "Setting ports forwarding on Oracle VirtualBox machine..."
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "payara,tcp,,8080,,8080"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "payara admin console,tcp,,4848,,4848"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "kafka 1,tcp,,9091,,9091"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "kafka 2,tcp,,9092,,9092"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "kafka 3,tcp,,9093,,9093"
 	echo "Setting ports forwarding finished."
 
     docker-machine env $machineName

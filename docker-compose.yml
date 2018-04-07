@@ -12,7 +12,119 @@ services:
     ports:
       - 8080:8080
       - 4848:4848
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka1:9091,kafka2:9092,kafka3:9093
+      - TOPICS=current-weather
     volumes:
       - /c/Users/weather/deployments:/opt/payara5/glassfish/domains/domain1/autodeploy
     networks:
       - weather
+      
+  zookeeper1:
+    container_name: zookeeper1
+    hostname: zookeeper1
+    image: zookeeper
+    environment:
+      - ZOO_MY_ID=1
+      - ZOO_PORT=2181
+      - ZOO_SERVERS=server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+    ports:
+      - 2181:2181
+    volumes:
+      - /mnt/sda1/weather/zookeeper1/data:/data
+      - /mnt/sda1/weather/zookeeper1/datalog:/datalog
+    networks:
+      - weather
+
+  zookeeper2:
+    container_name: zookeeper2
+    hostname: zookeeper2
+    image: zookeeper
+    environment:
+      - ZOO_MY_ID=2
+      - ZOO_PORT=2182
+      - ZOO_SERVERS=server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+    ports:
+      - 2182:2182
+    volumes:
+      - /mnt/sda1/weather/zookeeper2/data:/data
+      - /mnt/sda1/weather/zookeeper2/datalog:/datalog
+    networks:
+      - weather
+
+  zookeeper3:
+    container_name: zookeeper3
+    hostname: zookeeper3
+    image: zookeeper
+    environment:
+      - ZOO_MY_ID=3
+      - ZOO_PORT=2183
+      - ZOO_SERVERS=server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+    ports:
+      - 2183:2183
+    volumes:
+      - /mnt/sda1/weather/zookeeper3/data:/data
+      - /mnt/sda1/weather/zookeeper3/datalog:/datalog
+    networks:
+      - weather
+
+  kafka1:
+    image: wurstmeister/kafka
+    container_name: kafka1
+    hostname: kafka1
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2182,zookeeper3:2183
+      - KAFKA_PORT=9091
+      - KAFKA_LISTENERS=PLAINTEXT://kafka1:9091
+      - KAFKA_CREATE_TOPICS=current-weather:1:2   #name:partitions:replicas:cleanup.policy
+    ports:
+      - 9091:9091
+    volumes:
+      - /mnt/sda1/weather/kafka1/data:/data
+    networks:
+      - weather
+    depends_on:
+        - zookeeper1
+        - zookeeper2
+        - zookeeper3
+
+  kafka2:
+    image: wurstmeister/kafka
+    container_name: kafka2
+    hostname: kafka2
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2182,zookeeper3:2183
+      - KAFKA_PORT=9092
+      - KAFKA_LISTENERS=PLAINTEXT://kafka2:9092
+    ports:
+      - 9092:9092
+    volumes:
+      - /mnt/sda1/weather/kafka2/data:/data
+    networks:
+      - weather
+    depends_on:
+        - zookeeper1
+        - zookeeper2
+        - zookeeper3
+
+  kafka3:
+    image: wurstmeister/kafka
+    container_name: kafka3
+    hostname: kafka3
+    environment:
+      - KAFKA_BROKERID=3
+      - KAFKA_PORT=9093
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2182,zookeeper3:2183
+      - KAFKA_LISTENERS=PLAINTEXT://kafka3:9093
+    ports:
+      - 9093:9093
+    volumes:
+      - /mnt/sda1/weather/kafka3/data:/data
+    networks:
+      - weather
+    depends_on:
+        - zookeeper1
+        - zookeeper2
+        - zookeeper3
