@@ -14,7 +14,6 @@ services:
       - 4848:4848
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka1:9091,kafka2:9092,kafka3:9093
-      - TOPICS=current-weather
     volumes:
       - /c/Users/weather/deployments:/opt/payara5/glassfish/domains/domain1/autodeploy
     networks:
@@ -77,7 +76,7 @@ services:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2182,zookeeper3:2183
       - KAFKA_PORT=9091
       - KAFKA_LISTENERS=PLAINTEXT://kafka1:9091
-      - KAFKA_CREATE_TOPICS=current-weather:1:2   #name:partitions:replicas:cleanup.policy
+      - KAFKA_CREATE_TOPICS=current-weather:1:2,temperature:1:2  #name:partitions:replicas:cleanup.policy
     ports:
       - 9091:9091
     volumes:
