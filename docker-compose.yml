@@ -14,6 +14,7 @@ services:
       - 4848:4848
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka1:9091,kafka2:9092,kafka3:9093
+      - CASSANDRA_CONTACT_POINTS=cassandra-node-1,cassandra-node-2,cassandra-node-3
     volumes:
       - /c/Users/weather/deployments:/opt/payara5/glassfish/domains/domain1/autodeploy
     networks:

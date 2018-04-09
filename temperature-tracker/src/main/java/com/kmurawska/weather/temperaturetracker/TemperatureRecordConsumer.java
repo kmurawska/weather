@@ -11,12 +11,12 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TemperatureRecordConsumer {
+class TemperatureRecordConsumer {
     private static final Logger LOG = Logger.getLogger(TemperatureRecordConsumer.class.getName());
     private final String id;
     private final Consumer<String, String> consumer;
 
-    public static TemperatureRecordConsumer create() {
+    static TemperatureRecordConsumer create() {
         String id = UUID.randomUUID().toString();
 
         Properties props = new Properties();
@@ -35,20 +35,20 @@ public class TemperatureRecordConsumer {
         this.consumer = consumer;
     }
 
-     void start(String topic) {
+    void subscribe(String topic) {
         consumer.subscribe(Collections.singletonList(topic));
         consumer.subscription().forEach(s -> LOG.log(Level.INFO, "--- Consumer: " + id + ": subscribed on topic: " + s));
     }
 
-    public String getId() {
+    String getId() {
         return id;
     }
 
-    public Consumer<String, String> getConsumer() {
+    Consumer<String, String> getConsumer() {
         return consumer;
     }
 
-    public void shutdown() {
+    void shutdown() {
         consumer.wakeup();
         LOG.log(Level.INFO, "--- Consumer: " + this.id + " will be closed...");
     }

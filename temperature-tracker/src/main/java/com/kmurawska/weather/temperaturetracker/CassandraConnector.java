@@ -14,15 +14,14 @@ import javax.ejb.Startup;
 @Singleton
 @Lock(LockType.READ)
 @Startup
-public class CassandraConnection {
-    private static final String[] CONTACT_POINTS = {"cassandra-node-1", "cassandra-node-2", "cassandra-node-3"};
+public class CassandraConnector {
     private Cluster cluster;
     private Session session;
 
     @PostConstruct
     public void init() {
         cluster = Cluster.builder()
-                .addContactPoints(CONTACT_POINTS)
+                .addContactPoints(System.getenv("CASSANDRA_CONTACT_POINTS").split(","))
                 .build();
         cluster.getConfiguration().getCodecRegistry().register(InstantCodec.instance);
         session = cluster.connect();

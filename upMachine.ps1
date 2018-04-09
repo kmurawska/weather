@@ -9,7 +9,7 @@ if ($dockerMachines -Like "*weather*") {
 	echo "Docker machine started."
 } else {
 	echo "Creating docker machine..." 
-	docker-machine create --driver virtualbox --virtualbox-disk-size "30000" --virtualbox-memory "4096" --virtualbox-cpu-count "2" --virtualbox-hostonly-cidr "192.168.90.1/24" $machineName 
+	docker-machine create --driver virtualbox --virtualbox-disk-size "30000" --virtualbox-memory "8192" --virtualbox-cpu-count "2" --virtualbox-hostonly-cidr "192.168.90.1/24" $machineName 
 	docker-machine start $machineName 
 	docker-machine env $machineName
 	&docker-machine env $machineName | Invoke-Expression

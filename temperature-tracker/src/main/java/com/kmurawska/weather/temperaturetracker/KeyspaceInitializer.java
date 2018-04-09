@@ -2,9 +2,9 @@ package com.kmurawska.weather.temperaturetracker;
 
 import com.datastax.driver.core.Session;
 
-public class KeyspaceInitializer {
+class KeyspaceInitializer {
     private static final String KEYSPACE = "temperature_recorder";
-    public static final String TEMPERATURE_BY_CITY = "temperature_recorder.temperature_by_city";
+    static final String TEMPERATURE_BY_CITY = "temperature_recorder.temperature_by_city";
     private final Session session;
 
     KeyspaceInitializer(Session session) {
@@ -28,8 +28,8 @@ public class KeyspaceInitializer {
                         "city TEXT," +
                         "temperature_measurement_id UUID," +
                         "value DECIMAL," +
-                        "recorded_at TIMESTAMP," +
-                        "PRIMARY KEY ((city), recorded_at)" +
+                        "recorded_at TIMESTAMP, " +
+                        "PRIMARY KEY ((city), recorded_at, temperature_measurement_id)" +
                         ") WITH CLUSTERING ORDER BY (recorded_at DESC);"
         );
     }

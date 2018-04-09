@@ -6,17 +6,15 @@ import org.apache.kafka.common.errors.WakeupException;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
-import javax.ejb.Lock;
-import javax.ejb.LockType;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import javax.ejb.*;
 import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.inject.Inject;
 import javax.json.JsonObject;
-import javax.json.bind.JsonbBuilder;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static javax.json.bind.JsonbBuilder.create;
 
 @Singleton
 @Lock(LockType.READ)
@@ -27,23 +25,23 @@ public class TemperatureTracker {
     private static final String TOPIC = "temperature";
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private TemperatureRecordConsumer consumer;
-    private Future<?> consumerFuture;
 
     @Resource
     ManagedExecutorService managedExecutorService;
 
+    @Inject
+    TemperatureMeasurementRecordHandler temperatureMeasurementRecordHandler;
+
     @PostConstruct
     public void init() {
         LOG.log(Level.INFO, "--- Starting messages consumption... ---");
-        consumerFuture = this.managedExecutorService.submit(this::startMessageConsumption);
+        this.managedExecutorService.submit(this::startMessageConsumption);
     }
 
     private void startMessageConsumption() {
-        LOG.log(Level.INFO, "+++++++++++++ Starting messages consumption 2 ... ---");
-
         this.consumer = TemperatureRecordConsumer.create();
         try {
-            this.consumer.start(TOPIC);
+            this.consumer.subscribe(TOPIC);
             while (!closed.get()) {
                 consumer.getConsumer().poll(TIMEOUT_IN_SECONDS * 1000).forEach(this::handleRecord);
             }
@@ -54,22 +52,20 @@ public class TemperatureTracker {
         }
     }
 
+    @Asynchronous
     private void handleRecord(ConsumerRecord record) {
-        managedExecutorService.submit(() -> {
-            LOG.log(Level.INFO, "--- Message: " + record.key() + "  consumed, " +
-                    "offset: " + record.offset() + " " +
-                    "partition : " + record.partition() + " " +
-                    "topic: " + record.topic());
-            TemperatureMeasurement temperature = new TemperatureMeasurement(JsonbBuilder.create().fromJson(record.value().toString(), JsonObject.class));
-            LOG.log(Level.INFO, "--- TemperatureMeasurement recorded: " + temperature.toString());
-        });
+        LOG.log(Level.INFO, "--- Message: " + record.key() + "  consumed, " +
+                "offset: " + record.offset() + " " +
+                "partition : " + record.partition() + " " +
+                "topic: " + record.topic());
+
+        temperatureMeasurementRecordHandler.handle(create().fromJson(record.value().toString(), JsonObject.class));
     }
 
     @PreDestroy
     public void cleanUp() {
         closed.set(true);
         consumer.shutdown();
-        consumerFuture = null;
         managedExecutorService.shutdown();
     }
 }
