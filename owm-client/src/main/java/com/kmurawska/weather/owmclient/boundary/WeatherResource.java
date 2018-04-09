@@ -1,7 +1,9 @@
-package com.kmurawska.weather.owmclient;
+package com.kmurawska.weather.owmclient.boundary;
 
-import javax.annotation.Resource;
-import javax.enterprise.concurrent.ManagedExecutorService;
+import com.kmurawska.weather.owmclient.control.CurrentWeatherEventProducer;
+import com.kmurawska.weather.owmclient.control.OpenWeatherMapClient;
+import com.kmurawska.weather.owmclient.entity.CurrentWeatherDataLoadedEvent;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -22,17 +24,14 @@ public class WeatherResource {
     OpenWeatherMapClient openWeatherMapClient;
 
     @Inject
-    WeatherEventProducer weatherEventProducer;
-
-    @Resource
-    ManagedExecutorService managedExecutorService;
+    CurrentWeatherEventProducer eventProducer;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response get() {
         try {
-            String weather = openWeatherMapClient.loadCurrentWeatherFor("Gdansk");
-            managedExecutorService.submit(() -> weatherEventProducer.publish(weather));
+            String weather = openWeatherMapClient.requestCurrentWeatherFor("Gdansk");
+            eventProducer.publish(new CurrentWeatherDataLoadedEvent(weather));
             return Response.ok(weather).build();
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "An error occurred during loading weather data.", e);
