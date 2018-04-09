@@ -1,6 +1,6 @@
-package com.kmurawska.weather.owmclient.control;
+package com.kmurawska.weather.weather_static_splitter.control;
 
-import com.kmurawska.weather.owmclient.entity.CurrentWeatherDataLoadedEvent;
+import com.kmurawska.weather.weather_static_splitter.entity.TemperatureRecordedEvent;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -16,20 +16,18 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CurrentWeatherEventProducer {
-    private static final Logger LOG = Logger.getLogger(CurrentWeatherEventProducer.class.getName());
-    private static final String TOPIC = "current-weather";
-    private String producerId;
+public class TemperatureRecordedEventProducer {
+    private static final Logger LOG = Logger.getLogger(TemperatureRecordedEventProducer.class.getName());
+    private static final String TOPIC = "temperature";
     private Producer<String, String> producer;
 
     @PostConstruct
     private void init() {
-        producerId = UUID.randomUUID().toString();
         producer = createProducer();
         producer.initTransactions();
     }
 
-    private Producer<String, String> createProducer() {
+    private static Producer<String, String> createProducer() {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, System.getenv("KAFKA_BOOTSTRAP_SERVERS"));
         props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString());
@@ -38,7 +36,7 @@ public class CurrentWeatherEventProducer {
         return new KafkaProducer<>(props);
     }
 
-    public void publish(CurrentWeatherDataLoadedEvent event) {
+    void publish(TemperatureRecordedEvent event) {
         final ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, event.getTrackingId(), event.asJson());
 
         try {

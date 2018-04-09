@@ -1,8 +1,8 @@
-package com.kmurawska.weather.owmclient.boundary;
+package com.kmurawska.weather.owm_client.boundary;
 
-import com.kmurawska.weather.owmclient.control.CurrentWeatherEventProducer;
-import com.kmurawska.weather.owmclient.control.OpenWeatherMapClient;
-import com.kmurawska.weather.owmclient.entity.CurrentWeatherDataLoadedEvent;
+import com.kmurawska.weather.owm_client.control.CurrentWeatherEventProducer;
+import com.kmurawska.weather.owm_client.control.OpenWeatherMapClient;
+import com.kmurawska.weather.owm_client.entity.CurrentWeatherDataLoadedEvent;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;

@@ -1,4 +1,4 @@
-package com.kmurawska.weather.owmclient;
+package com.kmurawska.weather.owm_client;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

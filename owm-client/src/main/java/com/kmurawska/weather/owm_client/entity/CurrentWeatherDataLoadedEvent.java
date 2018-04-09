@@ -1,9 +1,6 @@
-package com.kmurawska.weather.owmclient.entity;
+package com.kmurawska.weather.owm_client.entity;
 
 import java.util.UUID;
-
-import static com.kmurawska.weather.owmclient.PrivateFieldsVisibleJsonbConfig.privateFieldsVisible;
-import static javax.json.bind.JsonbBuilder.newBuilder;
 
 public class CurrentWeatherDataLoadedEvent {
     private final String trackingId;
@@ -19,7 +16,6 @@ public class CurrentWeatherDataLoadedEvent {
     }
 
     public String asJson() {
-        return newBuilder().withConfig(privateFieldsVisible()).build()
-                .toJson(this);
+        return weatherData;
     }
 }

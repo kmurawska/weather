@@ -1,4 +1,4 @@
-package com.kmurawska.weather.owmclient;
+package com.kmurawska.weather.owm_client;
 
 import javax.json.bind.JsonbConfig;
 import javax.json.bind.config.PropertyVisibilityStrategy;

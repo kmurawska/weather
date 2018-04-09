@@ -1,4 +1,4 @@
-package com.kmurawska.weather.owmclient.control;
+package com.kmurawska.weather.owm_client.control;
 
 import java.io.BufferedReader;
 import java.io.IOException;
