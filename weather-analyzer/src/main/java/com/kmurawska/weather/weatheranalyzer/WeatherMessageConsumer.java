@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 public class WeatherMessageConsumer implements Runnable {
     private static final Logger LOG = Logger.getLogger(WeatherMessageConsumer.class.getName());
     private static final int TIMEOUT_IN_SECONDS = 1;
+    private static final String TOPIC = "current-weather";
     private final Consumer<String, String> consumer;
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final String id;
@@ -59,18 +60,16 @@ public class WeatherMessageConsumer implements Runnable {
     }
 
     private void subscribe() {
-        consumer.subscribe(Collections.singletonList("current-weather"));
+        consumer.subscribe(Collections.singletonList(TOPIC));
         consumer.subscription().forEach(s -> LOG.log(Level.INFO, "--- Consumer: " + this.id + ": subscribed on topic: " + s));
     }
 
     private void handleRecord(ConsumerRecord record) {
         CompletableFuture.runAsync(() -> {
-            LOG.log(Level.INFO,
-                    "--- Message: " + record.key() + "  consumed, " +
-                            "offset: " + record.offset() + " " +
-                            "partition : " + record.partition() + " " +
-                            "topic: " + record.topic()
-            );
+            LOG.log(Level.INFO, "--- Message: " + record.key() + "  consumed, " +
+                    "offset: " + record.offset() + " " +
+                    "partition : " + record.partition() + " " +
+                    "topic: " + record.topic());
 
             JsonObject message = JsonbBuilder.create().fromJson(record.value().toString(), JsonObject.class);
 

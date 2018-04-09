@@ -34,6 +34,9 @@ if ($dockerMachines -Like "*weather*") {
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "kafka 1,tcp,,9091,,9091"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "kafka 2,tcp,,9092,,9092"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "kafka 3,tcp,,9093,,9093"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "cassandra CQL,tcp,,19042,,19042"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "cassandra CQL,tcp,,29042,,29042"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "cassandra CQL,tcp,,39042,,39042"
 	echo "Setting ports forwarding finished."
 
     docker-machine env $machineName

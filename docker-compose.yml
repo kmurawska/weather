@@ -127,3 +127,75 @@ services:
         - zookeeper1
         - zookeeper2
         - zookeeper3
+
+  cassandra-node-1:
+    container_name: cassandra-node-1
+    hostname: cassandra-node-1
+    image: cassandra-waitable
+    build:
+      context: ci/cassandra
+    environment:
+      - CASSANDRA_CLUSER_NAME=cassandra_example
+      - CASSANDRA_SEEDS=cassandra-node-1
+    expose:
+      - 8333
+      - 7000
+      - 7001
+      - 7199
+      - 9160
+    ports:
+      - 9042:9042
+    volumes:
+      - /mnt/sda1/cassandra_example/node1/shm:/var/lib/cassandra
+    networks:
+      - weather
+
+  cassandra-node-2:
+    container_name: cassandra-node-2
+    hostname: cassandra-node-2
+    image: cassandra-waitable
+    build:
+      context: ci/cassandra
+    environment:
+      - CASSANDRA_CLUSER_NAME=cassandra_example
+      - CASSANDRA_SEEDS=cassandra-node-1
+      - WAIT_FOR=cassandra-node-1;8333;READY
+    expose:
+      - 8333
+      - 7000
+      - 7001
+      - 7199
+      - 9160
+    ports:
+      - 29042:9042
+    volumes:
+      - /mnt/sda1/cassandra_example/node2/shm:/var/lib/cassandra
+    depends_on:
+      - cassandra-node-1
+    networks:
+      - weather
+
+  cassandra-node-3:
+    container_name: cassandra-node-3
+    hostname: cassandra-node-3
+    image: cassandra-waitable
+    build:
+      context: ci/cassandra
+    environment:
+      - CASSANDRA_CLUSER_NAME=cassandra_example
+      - CASSANDRA_SEEDS=cassandra-node-1
+      - WAIT_FOR=cassandra-node-2;8333;READY
+    expose:
+      - 8333
+      - 7000
+      - 7001
+      - 7199
+      - 9160
+    ports:
+      - 39042:9042
+    volumes:
+      - /mnt/sda1/cassandra_example/node3/shm:/var/lib/cassandra
+    depends_on:
+      - cassandra-node-2
+    networks:
+      - weather

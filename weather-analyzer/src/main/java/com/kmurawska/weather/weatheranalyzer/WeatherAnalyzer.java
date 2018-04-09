@@ -3,6 +3,8 @@ package com.kmurawska.weather.weatheranalyzer;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+import javax.ejb.Lock;
+import javax.ejb.LockType;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.concurrent.ManagedExecutorService;
@@ -11,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Singleton
+@Lock(LockType.READ)
 @Startup
 public class WeatherAnalyzer {
     private static final Logger LOG = Logger.getLogger(WeatherMessageConsumer.class.getName());
