@@ -147,7 +147,7 @@ services:
     ports:
       - 9042:9042
     volumes:
-      - /mnt/sda1/cassandra_example/node1/shm:/var/lib/cassandra
+      - /mnt/sda1/weather/node1/shm:/var/lib/cassandra
     networks:
       - weather
 
@@ -170,7 +170,7 @@ services:
     ports:
       - 29042:9042
     volumes:
-      - /mnt/sda1/cassandra_example/node2/shm:/var/lib/cassandra
+      - /mnt/sda1/weather/node2/shm:/var/lib/cassandra
     depends_on:
       - cassandra-node-1
     networks:
@@ -195,7 +195,7 @@ services:
     ports:
       - 39042:9042
     volumes:
-      - /mnt/sda1/cassandra_example/node3/shm:/var/lib/cassandra
+      - /mnt/sda1/weather/node3/shm:/var/lib/cassandra
     depends_on:
       - cassandra-node-2
     networks:

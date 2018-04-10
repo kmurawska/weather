@@ -1,4 +1,4 @@
-package com.kmurawska.weather.temperaturetracker;
+package com.kmurawska.weather.temperature_tracker.cassandra;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;

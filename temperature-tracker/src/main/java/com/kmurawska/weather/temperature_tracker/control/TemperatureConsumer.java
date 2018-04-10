@@ -1,6 +1,6 @@
-package com.kmurawska.weather.weather_static_splitter.control;
+package com.kmurawska.weather.temperature_tracker.control;
 
-import com.kmurawska.weather.weather_static_splitter.entity.TemperatureRecordedEvent;
+import com.kmurawska.weather.temperature_tracker.entity.TemperatureRecordedEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -18,16 +18,16 @@ import java.util.logging.Logger;
 
 import static javax.json.bind.JsonbBuilder.create;
 
-public class CurrentWeatherConsumer implements Runnable {
-    private static final String TOPIC = "current-weather";
-    private static final Logger LOG = Logger.getLogger(CurrentWeatherConsumer.class.getName());
+public class TemperatureConsumer implements Runnable {
+    private static final String TOPIC = "temperature";
+    private static final Logger LOG = Logger.getLogger(TemperatureConsumer.class.getName());
     private static final int TIMEOUT_IN_SECONDS = 1;
-    private static final String GROUP_ID = UUID.randomUUID().toString();
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final KafkaConsumer<String, String> consumer;
     private final Consumer<TemperatureRecordedEvent> eventHandler;
+    private static final String GROUP_ID = UUID.randomUUID().toString();
 
-    CurrentWeatherConsumer(Consumer<TemperatureRecordedEvent> eventHandler) {
+    TemperatureConsumer(Consumer<TemperatureRecordedEvent> eventHandler) {
         this.eventHandler = eventHandler;
         this.consumer = createConsumer();
         this.subscribe();

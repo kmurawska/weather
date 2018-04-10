@@ -1,17 +1,17 @@
-package com.kmurawska.weather.temperaturetracker;
+package com.kmurawska.weather.temperature_tracker.cassandra;
 
 import com.datastax.driver.core.Session;
 
-class KeyspaceInitializer {
+public class KeyspaceInitializer {
     private static final String KEYSPACE = "temperature_recorder";
-    static final String TEMPERATURE_BY_CITY = "temperature_recorder.temperature_by_city";
+    public static final String TEMPERATURE_BY_CITY = "temperature_recorder.temperature_by_city";
     private final Session session;
 
     KeyspaceInitializer(Session session) {
         this.session = session;
     }
 
-    void init() {
+    public void init() {
         createKeyspace();
         createTables();
     }

@@ -44,6 +44,7 @@ public class TemperatureRecordedEventProducer {
             LOG.log(Level.INFO, "--- Publishing event: " + record.key());
             producer.send(record);
             producer.commitTransaction();
+            LOG.log(Level.INFO, "--- Event: " + record.key() + " published.");
         } catch (ProducerFencedException e) {
             producer.close();
         } catch (KafkaException e) {

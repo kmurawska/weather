@@ -1,22 +1,20 @@
-package com.kmurawska.weather.temperaturetracker;
-
-import com.datastax.driver.core.utils.UUIDs;
+package com.kmurawska.weather.temperature_tracker.entity;
 
 import javax.json.JsonObject;
 import java.time.Instant;
 import java.util.UUID;
 
-public class TemperatureMeasurement {
+public class TemperatureRecordedEvent {
     private final UUID id;
     private final String city;
     private final double value;
     private final Instant recordedAt;
 
-    TemperatureMeasurement(JsonObject jsonObject) {
-        this.id = UUIDs.random();
+    public TemperatureRecordedEvent(String trackingId, JsonObject jsonObject) {
+        this.id = UUID.fromString(trackingId);
         this.city = jsonObject.getString("city");
         this.value = jsonObject.getJsonNumber("value").doubleValue();
-        this.recordedAt = Instant.now();
+        this.recordedAt = Instant.parse(jsonObject.getString("recordedAtUtc"));
     }
 
     public UUID getId() {
@@ -37,7 +35,7 @@ public class TemperatureMeasurement {
 
     @Override
     public String toString() {
-        return "TemperatureMeasurement{" +
+        return "TemperatureRecordedEvent{" +
                 "id=" + id +
                 ", city='" + city + '\'' +
                 ", value=" + value +

@@ -1,4 +1,4 @@
-package com.kmurawska.weather.temperaturetracker;
+package com.kmurawska.weather.temperature_tracker;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
