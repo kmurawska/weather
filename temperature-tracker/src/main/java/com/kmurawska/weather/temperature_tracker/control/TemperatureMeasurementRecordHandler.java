@@ -1,6 +1,5 @@
 package com.kmurawska.weather.temperature_tracker.control;
 
-import com.kmurawska.weather.temperature_tracker.cassandra.CassandraConnector;
 import com.kmurawska.weather.temperature_tracker.entity.TemperatureRecordedEvent;
 
 import javax.ejb.Stateless;
@@ -21,9 +20,4 @@ public class TemperatureMeasurementRecordHandler {
 
         LOG.log(Level.INFO, "--- TemperatureRecordedEvent " + temperature.getId() + " recorded.");
     }
-
-    private void a() {
-        throw new IllegalStateException();
-    }
-
 }

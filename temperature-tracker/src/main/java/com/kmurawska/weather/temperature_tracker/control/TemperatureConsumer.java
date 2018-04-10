@@ -25,7 +25,7 @@ public class TemperatureConsumer implements Runnable {
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final KafkaConsumer<String, String> consumer;
     private final Consumer<TemperatureRecordedEvent> eventHandler;
-    private static final String GROUP_ID = UUID.randomUUID().toString();
+    private static final String GROUP_ID = "TemperatureConsumer";
 
     TemperatureConsumer(Consumer<TemperatureRecordedEvent> eventHandler) {
         this.eventHandler = eventHandler;
@@ -66,6 +66,7 @@ public class TemperatureConsumer implements Runnable {
     private void consume() {
         ConsumerRecords<String, String> records = consumer.poll(TIMEOUT_IN_SECONDS * 1000);
         records.forEach(r -> {
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAA");
             JsonObject event = create().fromJson(r.value(), JsonObject.class);
             eventHandler.accept(new TemperatureRecordedEvent(r.key(), event));
         });

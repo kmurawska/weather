@@ -22,7 +22,7 @@ public class CurrentWeatherConsumer implements Runnable {
     private static final String TOPIC = "current-weather";
     private static final Logger LOG = Logger.getLogger(CurrentWeatherConsumer.class.getName());
     private static final int TIMEOUT_IN_SECONDS = 1;
-    private static final String GROUP_ID = UUID.randomUUID().toString();
+    private static final String GROUP_ID = "CurrentWeatherConsumer";
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final KafkaConsumer<String, String> consumer;
     private final Consumer<TemperatureRecordedEvent> eventHandler;
