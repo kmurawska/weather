@@ -66,7 +66,6 @@ public class TemperatureConsumer implements Runnable {
     private void consume() {
         ConsumerRecords<String, String> records = consumer.poll(TIMEOUT_IN_SECONDS * 1000);
         records.forEach(r -> {
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAA");
             JsonObject event = create().fromJson(r.value(), JsonObject.class);
             eventHandler.accept(new TemperatureRecordedEvent(r.key(), event));
         });
