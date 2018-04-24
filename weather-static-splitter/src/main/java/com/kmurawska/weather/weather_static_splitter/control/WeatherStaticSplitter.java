@@ -13,6 +13,7 @@ import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import java.util.Properties;
 
 @Singleton
 @Lock(LockType.READ)
@@ -28,11 +29,14 @@ public class WeatherStaticSplitter {
     @Inject
     TemperatureRecordedEventProducer kafkaEventProducer;
 
+    @Inject
+    Properties kafkaProperties;
+
     private CurrentWeatherConsumer consumer;
 
     @PostConstruct
     public void init() {
-        consumer = new CurrentWeatherConsumer(e -> temperatureRecordedEvent.fire(e));
+        consumer = new CurrentWeatherConsumer(kafkaProperties, e -> temperatureRecordedEvent.fire(e));
         this.managedExecutorService.submit(consumer);
     }
 

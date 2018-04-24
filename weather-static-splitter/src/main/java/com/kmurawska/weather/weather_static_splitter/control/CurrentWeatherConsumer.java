@@ -5,12 +5,10 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
-import org.apache.kafka.common.serialization.StringDeserializer;
 
 import javax.json.JsonObject;
 import java.util.Collections;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -27,21 +25,15 @@ public class CurrentWeatherConsumer implements Runnable {
     private final KafkaConsumer<String, String> consumer;
     private final Consumer<TemperatureRecordedEvent> eventHandler;
 
-    CurrentWeatherConsumer(Consumer<TemperatureRecordedEvent> eventHandler) {
+    CurrentWeatherConsumer(Properties kafkaProperties, Consumer<TemperatureRecordedEvent> eventHandler) {
         this.eventHandler = eventHandler;
-        this.consumer = createConsumer();
+        this.consumer = createConsumer(kafkaProperties);
         this.subscribe();
     }
 
-    private KafkaConsumer<String, String> createConsumer() {
-        Properties props = new Properties();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, System.getenv("KAFKA_BOOTSTRAP_SERVERS"));
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
-        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
-        props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        return new KafkaConsumer<>(props);
+    private KafkaConsumer<String, String> createConsumer(Properties kafkaProperties) {
+        kafkaProperties.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
+        return new KafkaConsumer<>(kafkaProperties);
     }
 
     private void subscribe() {

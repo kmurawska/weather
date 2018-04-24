@@ -31,6 +31,11 @@
             <artifactId>kafka-clients</artifactId>
             <version>1.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.kmurawska.weather.lib</groupId>
+            <artifactId>kafka-configurator</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

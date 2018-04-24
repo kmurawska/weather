@@ -12,6 +12,7 @@ import javax.ejb.Startup;
 import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import java.util.Properties;
 
 @Singleton
 @Lock(LockType.READ)
@@ -23,11 +24,14 @@ public class TemperatureTracker {
     @Inject
     Event<TemperatureRecordedEvent> temperatureRecordedEvent;
 
+    @Inject
+    Properties kafkaProperties;
+
     private TemperatureConsumer temperatureConsumer;
 
     @PostConstruct
     public void init() {
-        temperatureConsumer = new TemperatureConsumer(e -> temperatureRecordedEvent.fire(e));
+        temperatureConsumer = new TemperatureConsumer(kafkaProperties, e -> temperatureRecordedEvent.fire(e));
         this.managedExecutorService.submit(temperatureConsumer);
     }
 

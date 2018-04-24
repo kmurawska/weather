@@ -4,12 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.kmurawska.weather</groupId>
-    <artifactId>temperature-tracker</artifactId>
+    <groupId>com.kmurawska.weather.lib</groupId>
+    <artifactId>kafka-configurator</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
-    <name>owm-client</name>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -31,25 +30,9 @@
             <artifactId>kafka-clients</artifactId>
             <version>1.1.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.kmurawska.weather.lib</groupId>
-            <artifactId>kafka-configurator</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.datastax.cassandra</groupId>
-            <artifactId>cassandra-driver-core</artifactId>
-            <version>3.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.datastax.cassandra</groupId>
-            <artifactId>cassandra-driver-extras</artifactId>
-            <version>3.1.4</version>
-        </dependency>
     </dependencies>
 
-    <build>
-        <finalName>temperature-tracker</finalName>
-    </build>
-
+  <!--  <build>
+        <finalName>kafka-configurator</finalName>
+    </build>-->
 </project>

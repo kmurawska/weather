@@ -3,23 +3,27 @@ package com.kmurawska.weather.owm_client.control;
 import com.kmurawska.weather.owm_client.entity.CurrentWeatherDataLoadedEvent;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.ProducerFencedException;
-import org.apache.kafka.common.serialization.StringSerializer;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.apache.kafka.clients.producer.ProducerConfig.TRANSACTIONAL_ID_CONFIG;
+
 public class CurrentWeatherEventProducer {
     private static final Logger LOG = Logger.getLogger(CurrentWeatherEventProducer.class.getName());
     private static final String TOPIC = "current-weather";
     private Producer<String, String> producer;
+
+    @Inject
+    Properties kafkaProperties;
 
     @PostConstruct
     private void init() {
@@ -28,12 +32,8 @@ public class CurrentWeatherEventProducer {
     }
 
     private Producer<String, String> createProducer() {
-        Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, System.getenv("KAFKA_BOOTSTRAP_SERVERS"));
-        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString());
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        return new KafkaProducer<>(props);
+        kafkaProperties.put(TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString());
+        return new KafkaProducer<>(kafkaProperties);
     }
 
     public void publish(CurrentWeatherDataLoadedEvent event) {

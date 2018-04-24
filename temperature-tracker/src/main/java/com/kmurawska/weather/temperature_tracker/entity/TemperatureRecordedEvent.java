@@ -1,8 +1,12 @@
 package com.kmurawska.weather.temperature_tracker.entity;
 
+import com.datastax.driver.core.Row;
+
 import javax.json.JsonObject;
 import java.time.Instant;
 import java.util.UUID;
+
+import static javax.json.Json.createObjectBuilder;
 
 public class TemperatureRecordedEvent {
     private final UUID id;
@@ -15,6 +19,13 @@ public class TemperatureRecordedEvent {
         this.city = jsonObject.getString("city");
         this.value = jsonObject.getJsonNumber("value").doubleValue();
         this.recordedAt = Instant.parse(jsonObject.getString("recordedAtUtc"));
+    }
+
+    public TemperatureRecordedEvent(Row row) {
+        this.id = row.getUUID("temperature_measurement_id");
+        this.city = row.getString("city");
+        this.value = row.getDecimal("value").doubleValue();
+        this.recordedAt = row.getTimestamp("recorded_at").toInstant();
     }
 
     public UUID getId() {
@@ -41,5 +52,14 @@ public class TemperatureRecordedEvent {
                 ", value=" + value +
                 ", recordedAt=" + recordedAt +
                 '}';
+    }
+
+    public JsonObject asJson() {
+        return createObjectBuilder()
+                .add("temperatureMeasurementId", this.id.toString())
+                .add("city", this.city)
+                .add("value", this.value)
+                .add("recordedAt", this.recordedAt.toString())
+                .build();
     }
 }

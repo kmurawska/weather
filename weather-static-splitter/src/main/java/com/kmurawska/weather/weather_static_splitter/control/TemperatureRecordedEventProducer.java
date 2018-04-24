@@ -7,10 +7,10 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.ProducerFencedException;
-import org.apache.kafka.common.serialization.StringSerializer;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -21,19 +21,18 @@ public class TemperatureRecordedEventProducer {
     private static final String TOPIC = "temperature";
     private Producer<String, String> producer;
 
+    @Inject
+    Properties kafkaProperties;
+
     @PostConstruct
     private void init() {
         producer = createProducer();
         producer.initTransactions();
     }
 
-    private static Producer<String, String> createProducer() {
-        Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, System.getenv("KAFKA_BOOTSTRAP_SERVERS"));
-        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString());
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        return new KafkaProducer<>(props);
+    private Producer<String, String> createProducer() {
+        kafkaProperties.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString());
+        return new KafkaProducer<>(kafkaProperties);
     }
 
     void publish(TemperatureRecordedEvent event) {
@@ -44,7 +43,7 @@ public class TemperatureRecordedEventProducer {
             LOG.log(Level.INFO, "--- Publishing event: " + record.key());
             producer.send(record);
             producer.commitTransaction();
-            LOG.log(Level.INFO, "--- Event: " + record.key() + " published.");
+            LOG.log(Level.INFO, "--- Event: " + record.key() + " published to topic: " + TOPIC);
         } catch (ProducerFencedException e) {
             producer.close();
         } catch (KafkaException e) {
