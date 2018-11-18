@@ -2,11 +2,11 @@ package com.kmurawska.weather.owm_client.entity;
 
 import java.util.UUID;
 
-public class CurrentWeatherDataLoadedEvent {
+public class WeatherDataLoadedEvent {
     private final String trackingId;
     private final String weatherData;
 
-    public CurrentWeatherDataLoadedEvent(String weatherData) {
+    public WeatherDataLoadedEvent(String weatherData) {
         this.trackingId = UUID.randomUUID().toString();
         this.weatherData = weatherData;
     }

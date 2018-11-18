@@ -77,7 +77,7 @@ services:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2182,zookeeper3:2183
       - KAFKA_PORT=9091
       - KAFKA_LISTENERS=PLAINTEXT://kafka1:9091
-      - KAFKA_CREATE_TOPICS=current-weather:1:2,temperature:1:2  #name:partitions:replicas:cleanup.policy
+      - KAFKA_CREATE_TOPICS=current-weather:1:2,temperature:1:2,weather-forecast:1:2  #name:partitions:replicas:cleanup.policy
     ports:
       - 9091:9091
     volumes:
@@ -133,8 +133,6 @@ services:
     container_name: cassandra-node-1
     hostname: cassandra-node-1
     image: cassandra-waitable
-    build:
-      context: ci/cassandra
     environment:
       - CASSANDRA_CLUSER_NAME=cassandra_example
       - CASSANDRA_SEEDS=cassandra-node-1
@@ -155,8 +153,6 @@ services:
     container_name: cassandra-node-2
     hostname: cassandra-node-2
     image: cassandra-waitable
-    build:
-      context: ci/cassandra
     environment:
       - CASSANDRA_CLUSER_NAME=cassandra_example
       - CASSANDRA_SEEDS=cassandra-node-1
@@ -180,8 +176,6 @@ services:
     container_name: cassandra-node-3
     hostname: cassandra-node-3
     image: cassandra-waitable
-    build:
-      context: ci/cassandra
     environment:
       - CASSANDRA_CLUSER_NAME=cassandra_example
       - CASSANDRA_SEEDS=cassandra-node-1

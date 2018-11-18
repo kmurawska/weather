@@ -1,8 +1,8 @@
 package com.kmurawska.weather.owm_client.boundary;
 
-import com.kmurawska.weather.owm_client.control.CurrentWeatherEventProducer;
-import com.kmurawska.weather.owm_client.control.OpenWeatherMapClient;
-import com.kmurawska.weather.owm_client.entity.CurrentWeatherDataLoadedEvent;
+import com.kmurawska.weather.owm_client.control.FiveDayWeatherForecastClient;
+import com.kmurawska.weather.owm_client.control.WeatherForecastEventProducer;
+import com.kmurawska.weather.owm_client.entity.WeatherDataLoadedEvent;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -16,22 +16,22 @@ import java.util.logging.Logger;
 
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 
-@Path("weather")
-public class WeatherResource {
-    private static final Logger LOG = Logger.getLogger(WeatherResource.class.getName());
+@Path("weather-forecast")
+public class WeatherForecastResource {
+    private static final Logger LOG = Logger.getLogger(WeatherForecastResource.class.getName());
 
     @Inject
-    OpenWeatherMapClient openWeatherMapClient;
+    FiveDayWeatherForecastClient client;
 
     @Inject
-    CurrentWeatherEventProducer eventProducer;
+    WeatherForecastEventProducer eventProducer;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response get() {
         try {
-            String weather = openWeatherMapClient.requestCurrentWeatherFor("Gdansk");
-            eventProducer.publish(new CurrentWeatherDataLoadedEvent(weather));
+            String weather = client.requestCurrentWeatherFor("Gdansk");
+            eventProducer.publish(new WeatherDataLoadedEvent(weather));
             return Response.ok(weather).build();
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "An error occurred during loading weather data.", e);

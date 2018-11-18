@@ -17,9 +17,9 @@ import java.util.logging.Logger;
 
 import static org.apache.kafka.clients.producer.ProducerConfig.TRANSACTIONAL_ID_CONFIG;
 
-public class CurrentWeatherEventProducer {
-    private static final Logger LOG = Logger.getLogger(CurrentWeatherEventProducer.class.getName());
-    private static final String TOPIC = "current-weather";
+public class WeatherForecastEventProducer {
+    private static final Logger LOG = Logger.getLogger(WeatherForecastEventProducer.class.getName());
+    private static final String TOPIC = "weather-forecast";
     private Producer<String, String> producer;
 
     @Inject

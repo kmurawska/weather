@@ -7,8 +7,8 @@ import java.net.URL;
 
 import static java.util.stream.Collectors.joining;
 
-public class OpenWeatherMapClient {
-    private static final String OPEN_WEATHER_MAP_URL = "http://api.openweathermap.org/data/2.5/weather?id=524901";
+public class FiveDayWeatherForecastClient {
+    private static final String OPEN_WEATHER_MAP_URL = "http://api.openweathermap.org/data/2.5/forecast?units=metric";
     private static final String API_KEY = "8c797b048309a1d0a3027d4e2df110d2";
 
     public String requestCurrentWeatherFor(String city) throws IOException {

@@ -1,8 +1,8 @@
 package com.kmurawska.weather.owm_client.boundary;
 
 import com.kmurawska.weather.owm_client.control.CurrentWeatherEventProducer;
-import com.kmurawska.weather.owm_client.control.OpenWeatherMapClient;
-import com.kmurawska.weather.owm_client.entity.CurrentWeatherDataLoadedEvent;
+import com.kmurawska.weather.owm_client.control.CurrentWeatherClient;
+import com.kmurawska.weather.owm_client.entity.WeatherDataLoadedEvent;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
@@ -19,7 +19,7 @@ public class WeatherLoaderTimer {
     private static final Logger LOG = Logger.getLogger(WeatherLoaderTimer.class.getName());
 
     @Inject
-    OpenWeatherMapClient openWeatherMapClient;
+    CurrentWeatherClient openWeatherMapClient;
 
     @Inject
     CurrentWeatherEventProducer weatherEventProducer;
@@ -28,7 +28,7 @@ public class WeatherLoaderTimer {
     void load() {
         try {
             String weather = openWeatherMapClient.requestCurrentWeatherFor("Gdansk");
-            weatherEventProducer.publish(new CurrentWeatherDataLoadedEvent(weather));
+            weatherEventProducer.publish(new WeatherDataLoadedEvent(weather));
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "An error occurred during loading weather data.", e);
         }
