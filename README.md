@@ -1,4 +1,6 @@
-  * Start consumer:
+Example project with kafaka and cassandra based on JEE 8.
+
+* Start consumer:
   
  	 ```
 	docker exec -it kafka1 bash /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka1:9091 --topic current-weather --from-beginning
